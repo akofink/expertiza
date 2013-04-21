@@ -12,25 +12,20 @@ Setup
 
 The expertiza environment is already set up in [NC State's VCL](https://vcl.ncsu.edu) image "Ruby on Rails".
 If you have access, this is quickest way to get a development environment running for Expertiza.
+See the Expertiza wiki on [developing Expertiza on the VCL](http://wikis.lib.ncsu.edu/index.php/Developing_Expertiza_on_the_VCL).
 
-If not:
+Using the VCL is the quickest way to get started, but you may find it awkward developing on a remote machine
+with network lag and having to reinstall gems every time you connect. Installing locally can be a pain though too.
+Life is full of tradeoffs. :-) The good news is that you can start on one environment, push your work to git,
+and switch to another environment if you don't like the one you started with.
 
-### Tools
+### Installing locally
 
- * [Set up git](http://help.github.com/set-up-git-redirect)
- * Install Ruby 1.8.7. (Some plugins/gems we use are not yet 1.9.2 compatible)
-   On Linux/OSX, use [rvm](http://beginrescueend.com).
-   On Windows, use [RubyInstaller](http://rubyinstaller.org) and [RailsInstaller](http://railsinstaller.org).
- * `gem install bundler` (see [issues on Windows](http://matt-hulse.com/articles/2010/01/30/from-zero-to-rails3-on-windows-in-600-seconds/))
+See the Expertiza wiki for setup instructions. Please update the wiki with corrections or additional helpful information.
 
-### Dependencies
-
- * libxslt development libraries [OSX: (already installed?) Ubuntu: `sudo apt-get install libxslt-dev` Fedora: `yum install libxslt-devel` Windows: ?]
- * libmysqlclient [OSX: `brew install mysql` Ubuntu: `sudo apt-get install mysql-server mysql-client libmysqlclient-dev` Fedora: `yum install mysql mysql-server mysql-devel`]
- * (optional) [graphviz](http://www.graphviz.org)
- * bundled gems: `bundle install`
- 
- If anything is missing here, please report it in an issue or fix it in a pull request. Thanks!
+ * [OSX](http://wikis.lib.ncsu.edu/index.php/Creating_a_Mac_OS_X_Development_Environment_for_the_Expertiza_Application)
+ * [Linux](http://wikis.lib.ncsu.edu/index.php/Creating_a_Linux_Development_Environment_for_the_Expertiza_Application)
+ * [Windows](http://wikis.lib.ncsu.edu/index.php/Creating_a_Windows_Development_Environment_for_the_Expertiza_Application)
 
 Contributing
 ------------
