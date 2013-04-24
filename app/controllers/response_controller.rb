@@ -36,21 +36,7 @@ class ResponseController < ApplicationController
       | question |
       @review_scores << Score.find_by_response_id_and_question_id(@response.id, question.id)
     }
-    #**********************
-    # Check whether this is Jen's assgt. & if so, use her rubric
-    #if (@assignment.instructor_id == User.find_by_name("efg").id) && @title == "Review"
-     # if @assignment.id < 469
-     #    @next_action = "custom_update"
-     #    render :action => 'custom_response'
-     #else
-     #    @next_action = "custom_update"
-     #    render :action => 'custom_response_2011'
-    # end
-   # else
-      # end of special code (except for the end below, to match the if above)
-      #**********************
-      render :action => 'response'
-   # end
+    render :action => 'response'
   end  
   
   def update
@@ -82,9 +68,10 @@ class ResponseController < ApplicationController
 
 
     begin
-       ResponseHelper.host = request.host_with_port      #storing the host address-port
-       ResponseHelper.compare_scores(@response, @questionnaire)
-       ScoreCache.update_cache(@response.id)
+      #storing the host address-port
+      ResponseHelper.host = request.host_with_port
+      ResponseHelper.compare_scores(@response, @questionnaire)
+      ScoreCache.update_cache(@response.id)
     
       msg = "Your response was successfully saved."
     rescue
