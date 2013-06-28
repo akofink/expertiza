@@ -4,19 +4,17 @@
 #
 #Author: AJBUDLON
 #Date: 7/18/2008
+
 class Node < ActiveRecord::Base
   acts_as_nested_set
 
   belongs_to :parent, :class_name => 'Node', :foreign_key => 'parent_id'
+  has_many :children, :class_name => 'Node', :foreign_key => 'parent_id'
 
-  # Retrieves the nodes of this type
-  def self.get(sortvar = nil,sortorder =nil,user_id = nil,show = nil, parent_id = nil)       
-  end
-  
   # Retrieves the children of this node
   def get_children(sortvar = nil,sortorder =nil,user_id = nil,show = nil,parent_id = nil)    
   end
-  
+
   # Retrieves the action partial for this node
   def get_partial_name
      self.class.table+"_actions"      

@@ -8,6 +8,10 @@ class FolderNode < Node
   def get_name
     TreeFolder.find(self.node_object_id).name    
   end
+
+  def is_leaf
+    false
+  end
   
   def get_partial_name
     if self.parent_id.nil?
