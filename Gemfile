@@ -6,7 +6,9 @@ group :default do
   ## Gems in Alphabetical Order
 
   gem 'bind-it'
-  gem 'anjlab-bootstrap-rails', :require => 'bootstrap-rails'
+  gem "therubyracer"
+  gem "less-rails" #Sprockets (what Rails 3.1 uses for its asset pipeline) supports LESS
+  gem "twitter-bootstrap-rails"
   gem 'capistrano'
   gem 'delayed_job_active_record'
   gem 'edavis10-ruby-web-search'
