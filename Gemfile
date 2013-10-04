@@ -35,14 +35,14 @@ group :default do
   gem 'stanford-core-nlp'
   gem 'superfish-rails'
   gem 'will_paginate'
-end
 
-# Gems used only for assets and not required
-# in production environments by default.
-group :assets do
-  gem 'sass-rails'
-  gem 'coffee-rails'
-  gem 'uglifier'
+  # Gems used only for assets and not required
+  # in production environments by default.
+  group :assets do
+    gem 'sass-rails'
+    gem 'coffee-rails'
+    gem 'uglifier'
+  end
 end
 
 group :development do
