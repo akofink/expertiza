@@ -10,6 +10,8 @@ class Authority
     case controller
     when 'pages'
       true
+    when 'student_tasks'
+      true
     end
   end
 end

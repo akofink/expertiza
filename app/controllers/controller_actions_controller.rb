@@ -1,10 +1,4 @@
 class ControllerActionsController < ApplicationController
-
-  # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify :method => :post, :only => [ :destroy, :create, :update ],
-         :redirect_to => { :action => :index }
-
-
   def index
     @controller_actions = ControllerAction.order(:name).paginate(per_page: 50, page: 1)
   end

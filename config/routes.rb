@@ -1,5 +1,4 @@
-Expertiza::Application.routes.draw do |map|
-
+Expertiza::Application.routes.draw do
   resources :admin do
     collection do
       get :list_super_administrators
@@ -336,6 +335,6 @@ Expertiza::Application.routes.draw do |map|
 
   root to: 'content_pages#view', page_name: 'home'
 
-  map.connect 'question/select_questionnaire_type', :controller => "questionnaire", :action => 'select_questionnaire_type'
-  map.connect ':controller/service.wsdl', :action => 'wsdl'
+  get 'question/select_questionnaire_type', :controller => "questionnaire", :action => 'select_questionnaire_type'
+  get ':controller/service.wsdl', :action => 'wsdl'
 end

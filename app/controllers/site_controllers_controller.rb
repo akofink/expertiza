@@ -1,9 +1,4 @@
 class SiteControllersController < ApplicationController
-
-  # GETs should be safe (see http://www.w3.org/2001/tag/doc/whenToUseGet.html)
-  verify :method => :post, :only => [ :destroy, :create, :update ],
-         :redirect_to => { :action => :index }
-
   def index
     @builtin_site_controllers = SiteController.builtin
     @app_site_controllers = SiteController.application

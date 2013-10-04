@@ -16,7 +16,7 @@ class StudentTask
       :assignment => participant.assignment,
       :topic => participant.topic,
       :current_stage => participant.current_stage,
-      :stage_deadline => Time.parse(participant.stage_deadline)
+      :stage_deadline => (Time.parse(participant.stage_deadline) rescue Time.now)
     )
   end
 
@@ -27,7 +27,7 @@ class StudentTask
   def self.from_user(user)
     user.assignment_participants.map do |participant|
       StudentTask.from_participant participant
-    end.sort_by(&:stage_deadline)
+    end.sort_by(&:stage_deadline).reverse
   end
 
   def complete?
