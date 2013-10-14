@@ -23,6 +23,7 @@ class Assignment < ActiveRecord::Base
   has_many :questionnaires, :through => :assignment_questionnaires
   belongs_to :instructor, :class_name => 'User', :foreign_key => 'instructor_id'
   has_many :sign_up_topics, :foreign_key => 'assignment_id', :dependent => :destroy
+  alias_method :topics, :sign_up_topics
   has_many :response_maps, :foreign_key => 'reviewed_object_id', :class_name => 'ResponseMap'
   #TODO: A bug in Rails http://dev.rubyonrails.org/ticket/4996 prevents us from using this:
   # has_many :responses, :through => :response_maps, :source => 'response'
@@ -59,25 +60,26 @@ class Assignment < ActiveRecord::Base
   def candidate_topics_to_review
     return nil if sign_up_topics.empty? # This is not a topic assignment
 
-    contributor_set = Array.new(contributors)
+    candidate_topics = topics
 
     # Reject contributors that have not selected a topic, or have no submissions
-    contributor_set.reject! { |contributor| signed_up_topic(contributor).nil? or !contributor.has_submissions? }
+    candidate_topics.reject! { |topic| !topic || !topic.has_submissions? }
 
-    # Reject contributions of topics whose deadline has passed
-    contributor_set.reject! { |contributor| contributor.assignment.get_current_stage(signed_up_topic(contributor).id) == 'Complete' or
-                                            contributor.assignment.get_current_stage(signed_up_topic(contributor).id) == 'submission' }
+    # Nasty code. Remove when TopicDeadline objects inherit from DueDate objects. This is a quick fix.
+    candidate_topics.reject! do |topic|
+      !review_allowed(topic)
+    end
 
     # Filter the contributors with the least number of reviews
-    # (using the fact that each contributor is associated with a topic)
-    contributor = contributor_set.min_by { |contributor| contributor.review_mappings.count }
+    contributors = candidate_topics.map(&:contributors).map do |topic_contributors|
+      topic_contributors.min_by { |contributor| contributor.review_mappings.count }
+    end.flatten
 
-    min_reviews = contributor.review_mappings.count rescue 0
-    contributor_set.reject! { |contributor| contributor.review_mappings.count > min_reviews + review_topic_threshold }
+    contributor_with_least_reviews = contributors.min_by { |contributor| contributor.review_mappings.count rescue 0 }
+    min_reviews = contributor_with_least_reviews.review_mappings.count
+    contributors.reject! { |contributor| contributor.review_mappings.count > min_reviews + review_topic_threshold }
 
-    candidate_topics = Set.new
-    contributor_set.each { |contributor| candidate_topics.add(signed_up_topic(contributor)) }
-    candidate_topics
+    contributors.map(&:topic)
   end
 
   def has_topics?
@@ -153,9 +155,6 @@ class Assignment < ActiveRecord::Base
   end
 
   def contributors
-    p "in contributors method:"
-    p "teams.size"
-    p teams.size
     #ACS Contributors are just teams, so removed check to see if it is a team assignment
     @contributors ||= teams #ACS
   end
@@ -330,7 +329,7 @@ class Assignment < ActiveRecord::Base
     right = DeadlineRight.find(right_id)
     #puts "DEBUG RIGHT_ID = " + right_id.to_s
     #puts "DEBUG RIGHT = " + right.name
-    return (right and (right.name == 'OK' or right.name == 'Late'))
+    return right && (right.name == 'OK' || right.name == 'Late')
   end
 
   # Determine if the next due date from now allows for submissions
@@ -340,7 +339,7 @@ class Assignment < ActiveRecord::Base
 
   # Determine if the next due date from now allows for reviews
   def review_allowed(topic_id=nil)
-    return (check_condition('review_allowed_id', topic_id) )
+    check_condition('review_allowed_id', topic_id)
   end
 
   # Determine if the next due date from now allows for metareviews
@@ -508,7 +507,7 @@ class Assignment < ActiveRecord::Base
   end
 
 
-  def get_current_stage(topic_id=nil)
+  def get_current_stage(topic_id = nil)
     if self.staggered_deadline?
       if topic_id.nil?
         return 'Unknown'

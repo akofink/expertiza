@@ -25,14 +25,7 @@ class AssignmentTeam < Team
 
   # Topic picked by the team
   def topic
-    team_topic = nil
-
-    participants.each do |participant|
-      team_topic = participant.topic
-      break if team_topic
-    end
-
-    team_topic
+    participants.map(&:topic).compact.first
   end
 
   # Whether the team has submitted work or not

@@ -4,6 +4,7 @@ class SignUpTopic < ActiveRecord::Base
   has_many :topic_deadlines, :foreign_key => 'topic_id', :dependent => :destroy
   alias_method :deadlines, :topic_deadlines
   has_many :assignment_participants, :foreign_key => 'topic_id'
+  alias_method :participants, :assignment_participants
 
   belongs_to :assignment
 
@@ -15,6 +16,16 @@ class SignUpTopic < ActiveRecord::Base
   #def get_team_id_from_topic_id(user_id)
   #  return find_by_sql("select t.id from teams t,teams_users u where t.id=u.team_id and u.user_id = 5");
   #end
+
+  def contributors
+    participants.map(&:team).uniq
+  end
+
+  def has_submissions?
+    participants.map(&:has_submissions?).inject do |final, current|
+      final || current
+    end
+  end
 
   def self.import(row,session,id = nil)
 
